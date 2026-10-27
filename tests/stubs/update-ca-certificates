@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# Stand-in for update-ca-certificates that rebuilds the fake root's CA store
+# from ca-certificates.conf. Every run is a fresh rebuild.
+#
+#   UCC_FAIL          fail after the store is emptied
+#   UCC_IGNORE_BANG   select "!" lines like plain lines, as a build that does
+#                     not support distrust would
+#   UCC_DROP          skip the root with this name, as a broken rebuild would
+
+certs="${R}/etc/ssl/certs"
+rm -f "${certs}"/*.pem "${certs}/ca-certificates.crt"
+
+if [ -n "${UCC_FAIL:-}" ]; then
+    exit 1
+fi
+
+filter='/^[#!]/d'
+if [ -n "${UCC_IGNORE_BANG:-}" ]; then
+    filter='/^#/d; s/^!//'
+fi
+
+sed "${filter}" "${R}/etc/ca-certificates.conf" | while read -r crt; do
+    src="${R}/usr/share/ca-certificates/${crt}"
+    [ -e "${src}" ] || continue
+    [ "${crt}" != "mozilla/${UCC_DROP:-}.crt" ] || continue
+    ln -s "${src}" "${certs}/$(basename "${crt}" .crt).pem"
+    cat "${src}" >> "${certs}/ca-certificates.crt"
+done

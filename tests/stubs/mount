@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Stand-in for mount that logs the call instead of remounting.
+# MOUNT_FAIL makes the call fail like a remount of a read-only overlay root.
+
+echo "mount $*" >> "${R}/mount.log"
+
+if [ -n "${MOUNT_FAIL:-}" ]; then
+    exit 32
+fi

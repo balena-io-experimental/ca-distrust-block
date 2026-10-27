@@ -1,0 +1,21 @@
+version: "2.4"
+
+services:
+  ca-distrust:
+    build: .
+    restart: always
+    labels:
+      # Host systemd over D-Bus. This grants root on the host.
+      io.balena.features.dbus: "1"
+      # For AUTO_REBOOT
+      io.balena.features.supervisor-api: "1"
+    environment:
+      # Set DRY_RUN=0 per device to apply the patch
+      DRY_RUN: "1"
+      # Set AUTO_REBOOT=1 to reboot through the supervisor, which honours update locks
+      AUTO_REBOOT: "0"
+    volumes:
+      - ca-distrust:/data
+
+volumes:
+  ca-distrust:

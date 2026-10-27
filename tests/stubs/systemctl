@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Stand-in for systemctl that answers is-active with BIND_ACTIVE, 0 by default.
+# 0 means the unit is active. Any other value means the unit is inactive.
+
+exit "${BIND_ACTIVE:-0}"

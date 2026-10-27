@@ -1,0 +1,12 @@
+[submodule "tests/bats"]
+	path = tests/bats
+	url = https://github.com/bats-core/bats-core.git
+	branch = master
+[submodule "tests/test_helper/bats-support"]
+	path = tests/test_helper/bats-support
+	url = https://github.com/bats-core/bats-support.git
+	branch = main
+[submodule "tests/test_helper/bats-assert"]
+	path = tests/test_helper/bats-assert
+	url = https://github.com/bats-core/bats-assert.git
+	branch = main
